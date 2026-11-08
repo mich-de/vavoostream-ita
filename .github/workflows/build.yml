@@ -1,7 +1,7 @@
 name: Build & Release
 on:
   push:
-    paths: ['daddy/src/**', 'patches/**', 'build-ci.sh']
+    paths: ['daddy/src/**', 'patches/**', '.github/workflows/build.yml']
   workflow_dispatch: {}
 
 permissions:
@@ -36,7 +36,8 @@ jobs:
 
       - name: Download apktool
         run: |
-          curl -sL -o apktool.jar "https://github.com/AiolosLee/apktool/releases/download/v${APKTOOL_VER}/apktool_${APKTOOL_VER}.jar"
+          curl -sL -o apktool.jar "https://github.com/iBotPeaches/Apktool/releases/download/v${APKTOOL_VER}/apktool_${APKTOOL_VER}.jar"
+          java -jar apktool.jar --version
 
       - name: Download upstream APK
         env:
