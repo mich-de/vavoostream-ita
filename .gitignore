@@ -1,0 +1,24 @@
+# APK (vanno come release)
+*.apk
+*.apk.idsig
+
+# Build
+daddy/out/
+daddy/out_t/
+daddy/dex/
+build_tmp/
+
+# Keystore
+tools/vavoo.jks
+
+# APK originale e decompilato completo
+orig/
+dec/
+
+# Reverse engineering / scratch
+re/
+java/
+
+# Tool binari (scaricabili)
+tools/apktool_3.0.3.jar
+tools/jadx-1.5.6/
