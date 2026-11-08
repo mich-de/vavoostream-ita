@@ -1,0 +1,110 @@
+name: Check upstream changes
+on:
+  schedule:
+    - cron: '0 8 * * *'   # ogni giorno alle 8 UTC
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check VavooStream upstream release
+        id: upstream
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LATEST=$(gh release view --repo pQu4k3r/vavoo_android-releases --json tagName -q .tagName 2>/dev/null || echo "unknown")
+          echo "upstream=$LATEST" >> "$GITHUB_OUTPUT"
+          if [ "$LATEST" != "v1.3.5" ] && [ "$LATEST" != "unknown" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::Nuova release upstream: $LATEST"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check DaddyLive structure
+        id: daddy
+        run: |
+          STATUS=$(curl -s -o /dev/null -w '%{http_code}' -m 15 \
+            -H 'Referer: https://dembed.st/' -H 'Origin: https://dembed.st' \
+            'https://edge.wedd48c.top/api/playlist-token?slug=premium877')
+          echo "token_status=$STATUS" >> "$GITHUB_OUTPUT"
+
+          if [ "$STATUS" = "200" ]; then
+            TOK=$(curl -s -m 15 \
+              -H 'Referer: https://dembed.st/' -H 'Origin: https://dembed.st' \
+              'https://edge.wedd48c.top/api/playlist-token?slug=premium877')
+            # verifica campi attesi: k, token, ttl
+            HAS_K=$(echo "$TOK" | python3 -c "import json,sys; d=json.load(sys.stdin); print('ok' if 'k' in d and 'token' in d else 'changed')" 2>/dev/null || echo "error")
+            echo "token_struct=$HAS_K" >> "$GITHUB_OUTPUT"
+          else
+            echo "token_struct=error" >> "$GITHUB_OUTPUT"
+          fi
+
+          EDGE_STATUS=$(curl -s -o /dev/null -w '%{http_code}' -m 15 \
+            'https://edge.wedd48c.top/')
+          echo "edge_status=$EDGE_STATUS" >> "$GITHUB_OUTPUT"
+
+          if [ "$STATUS" != "200" ] || [ "$HAS_K" != "ok" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check geil catalog structure
+        id: geil
+        run: |
+          CATALOG=$(curl -s -m 20 'https://geil.to/live/catalog/live/channels.json?cursor=0')
+          STRUCT=$(echo "$CATALOG" | python3 -c "
+          import json, sys
+          try:
+            d = json.load(sys.stdin)
+            items = d.get('items', [])
+            if not items: print('empty'); sys.exit()
+            i = items[0]
+            keys = sorted(i.keys())
+            italy = sum(1 for x in items if 'Italy' in x.get('tags', []))
+            print(f'ok keys={keys} italy_page0={italy}')
+          except: print('error')
+          " 2>/dev/null || echo "error")
+          echo "catalog=$STRUCT" >> "$GITHUB_OUTPUT"
+
+          if echo "$STRUCT" | grep -q "^ok"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open issue if something changed
+        if: steps.upstream.outputs.changed == 'true' || steps.daddy.outputs.changed == 'true' || steps.geil.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="[auto] Upstream change detected $(date +%Y-%m-%d)"
+          BODY="## Check automatico
+
+          **VavooStream upstream:** ${{ steps.upstream.outputs.upstream }} (changed=${{ steps.upstream.outputs.changed }})
+
+          **DaddyLive:**
+          - Token endpoint: HTTP ${{ steps.daddy.outputs.token_status }}
+          - Struttura token: ${{ steps.daddy.outputs.token_struct }}
+          - Edge raggiungibile: ${{ steps.daddy.outputs.edge_status }}
+          - Changed: ${{ steps.daddy.outputs.changed }}
+
+          **Geil catalog:**
+          - ${{ steps.geil.outputs.catalog }}
+          - Changed: ${{ steps.geil.outputs.changed }}
+
+          ---
+          Ricompilare se necessario: \`sh build.sh\` dopo aver aggiornato \`dec/\` e/o \`Proxy.java\`."
+
+          # Non aprire duplicati dello stesso giorno
+          EXISTING=$(gh issue list --search "in:title [auto] Upstream change detected $(date +%Y-%m-%d)" --json number -q '.[0].number' 2>/dev/null)
+          if [ -z "$EXISTING" ]; then
+            gh issue create --title "$TITLE" --body "$BODY" --label "upstream"
+          fi
