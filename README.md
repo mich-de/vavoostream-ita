@@ -23,6 +23,22 @@ build.sh            Build completa: javac → d8 → apktool b → +dex → zipa
 tools/              daddy_resolve.js (decoder standalone)
 ```
 
+## Uso personale
+
+Questo progetto è destinato esclusivamente all'uso personale.
+
+La sentenza del Tribunale di Lecce (giudice Roberta Maggio, dicembre 2024) ha assolto 13 imputati dall'accusa di ricettazione per la fruizione di contenuti IPTV pirata. Secondo il giudice, chi riceve il supporto illecito per uso personale e non per rimetterlo in commercio commette solo un illecito amministrativo — sanzione di 154 €, art. 174-ter L. 633/1941 — e non un reato: «emerge pacificamente che la detenzione dei supporti informatici fosse finalizzata a meri scopi di natura personale».
+
+La sentenza riguarda gli utenti finali, non chi organizza o distribuisce il servizio. Gli arresti eseguiti a Catania nel settembre 2025 (8 misure cautelari della Procura distrettuale) hanno colpito il vertice dell'organizzazione, non chi guarda i canali.
+
+Restano comunque vietati:
+
+- ridistribuire, vendere o condividere l'APK modificato o l'accesso ai flussi;
+- usare il progetto per attività commerciali;
+- aggirare i sistemi di protezione dei contenuti.
+
+La fruizione di contenuti pirata resta un illecito amministrativo, e il quadro normativo può cambiare con appelli o nuove leggi. Questo README non è un parere legale: per la tua situazione rivolgiti a un avvocato.
+
 ## Build
 
 Requisiti: JDK 21, Android SDK (build-tools 36, platform 36), apktool 3.x, keystore.
