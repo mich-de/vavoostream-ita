@@ -106,5 +106,7 @@ jobs:
           # Non aprire duplicati dello stesso giorno
           EXISTING=$(gh issue list --search "in:title [auto] Upstream change detected $(date +%Y-%m-%d)" --json number -q '.[0].number' 2>/dev/null)
           if [ -z "$EXISTING" ]; then
+            # gh fallisce se la label non esiste: creala (idempotente)
+            gh label create "upstream" --color "FBCA04" --description "Upstream change detected" --force >/dev/null 2>&1 || true
             gh issue create --title "$TITLE" --body "$BODY" --label "upstream"
           fi
