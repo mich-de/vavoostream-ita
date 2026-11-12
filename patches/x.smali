@@ -307,7 +307,7 @@
     return-void
 .end method
 
-.method public static A(ZLV2/W;I)V
+.method public static A(ZLV2/X;I)V
     .locals 7
 
     .line 1

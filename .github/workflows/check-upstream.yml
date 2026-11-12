@@ -20,7 +20,7 @@ jobs:
         run: |
           LATEST=$(gh release view --repo pQu4k3r/vavoo_android-releases --json tagName -q .tagName 2>/dev/null || echo "unknown")
           echo "upstream=$LATEST" >> "$GITHUB_OUTPUT"
-          if [ "$LATEST" != "v1.3.5" ] && [ "$LATEST" != "unknown" ]; then
+          if [ "$LATEST" != "v1.3.6" ] && [ "$LATEST" != "unknown" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
             echo "::warning::Nuova release upstream: $LATEST"
           else

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Build VavooStream ITA + Daddy: proxy Java -> classes3.dex, smali patch (dec/) -> apktool b -> +dex -> zipalign -> apksigner
-# Uso: sh build.sh   (da Git Bash)  ->  VavooStream-1.3.5-ITA-Daddy.apk
+# Uso: sh build.sh   (da Git Bash)  ->  VavooStream-1.3.6-ITA-Daddy.apk
 set -e
 cd "$(dirname "$0")"
 SDKW='C:\Users\mich-de\AppData\Local\Android\Sdk'
@@ -8,7 +8,7 @@ SDK=/c/Users/mich-de/AppData/Local/Android/Sdk
 BT=$SDK/build-tools/36.0.0
 export JAVA_HOME='C:\Program Files\Microsoft\jdk-21.0.13.21-hotspot'
 JB="/c/Program Files/Microsoft/jdk-21.0.13.21-hotspot/bin"
-OUT=VavooStream-1.3.5-ITA-Daddy.apk
+OUT=VavooStream-1.3.6-ITA-Daddy.apk
 
 rm -rf daddy/out daddy/dex build_tmp && mkdir -p daddy/out daddy/dex build_tmp
 "$JB/javac.exe" --release 8 -nowarn -d daddy/out -cp "$SDKW\\platforms\\android-36\\android.jar;daddy\\stub" daddy/src/it/daddy/*.java

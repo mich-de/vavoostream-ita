@@ -1,6 +1,6 @@
 # VavooStream ITA + DaddyLive
 
-Patch di [VavooStream 1.3.5](https://github.com/pQu4k3r/vavoo_android-releases) per l'Italia:
+Patch di [VavooStream 1.3.6](https://github.com/pQu4k3r/vavoo_android-releases) per l'Italia:
 
 - **Solo canali italiani** — il catalogo geil/huhu/vavoo viene filtrato a `country == "Italy"` in `R2/x.J`.
 - **DaddyLive come fallback** — un proxy locale (`it.daddy.Proxy`, porta 18877) aggiunge 38 canali Daddy al catalogo. Con "Raggruppa sorgenti" (attivo di default) l'app li usa come riserva dei canali geil con lo stesso nome. Varianti geil "EVENTS ONLY" (Rai Sport, Sky Sport 24) vengono scartate a favore del Daddy.
@@ -53,7 +53,7 @@ cp patches/x.smali dec/smali/R2/x.smali
 
 # 3. Build
 sh build.sh
-# → VavooStream-1.3.5-ITA-Daddy.apk
+# → VavooStream-1.3.6-ITA-Daddy.apk
 ```
 
 ## DaddyLive — schema HLS
