@@ -52,6 +52,7 @@ jobs:
           java -jar apktool.jar d "$ORIG_APK" -o dec -f
           cp patches/O.smali dec/smali/R2/O.smali
           cp patches/x.smali dec/smali/R2/x.smali
+          cp patches/F.smali dec/smali/R2/F.smali
 
       - name: Compile Proxy Java → classes3.dex
         run: |
@@ -94,7 +95,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="v1.3.6-ita"
+          TAG="v1.3.6"
           # cancella asset vecchio se esiste, poi carica il nuovo
           gh release upload "$TAG" "$APK_NAME" --clobber
           echo "### Release aggiornata: $TAG" >> "$GITHUB_STEP_SUMMARY"

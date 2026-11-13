@@ -19,6 +19,7 @@ daddy/
 patches/
   O.smali           Hook resolver: URL Daddy passano diretti + sostituzione IP LAN
   x.smali           Hook catalogo: filtro Italy + inject Daddy
+  F.smali           Update check: repo releases proprio invece di quello upstream
 build.sh            Build completa: javac → d8 → apktool b → +dex → zipalign → apksigner
 tools/              daddy_resolve.js (decoder standalone)
 ```
@@ -50,6 +51,7 @@ java -jar tools/apktool_3.0.3.jar d orig/VavooStream.apk -o dec
 # 2. Applica le patch smali
 cp patches/O.smali dec/smali/R2/O.smali
 cp patches/x.smali dec/smali/R2/x.smali
+cp patches/F.smali dec/smali/R2/F.smali
 
 # 3. Build
 sh build.sh
